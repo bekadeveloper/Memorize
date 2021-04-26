@@ -8,14 +8,17 @@
 import SwiftUI
 
 struct ContentView: View {
-    var viewModel: EmojiMemoryGame
+    @StateObject var viewModel: EmojiMemoryGame
     
     var body: some View {
         HStack {
             ForEach(viewModel.cards) { card in
                 CardView(card: card)
+                    .aspectRatio(2/3, contentMode: .fit)
                     .onTapGesture {
-                        viewModel.choose(card: card)
+                        withAnimation(.linear) {
+                            viewModel.choose(card: card)
+                        }
                     }
             }
         }
@@ -28,19 +31,26 @@ struct CardView: View {
     var card: MemoryGame<String>.Card
     
     var body: some View {
-        ZStack {
-            if card.isFaceUp {
-                RoundedRectangle(cornerRadius: 10.0).fill(Color.white)
-                RoundedRectangle(cornerRadius: 10.0).stroke(lineWidth: 3.0)
-                Text(card.content)
-            } else {
-                RoundedRectangle(cornerRadius: 10.0)
+        GeometryReader { geometry in
+            ZStack {
+                if card.isFaceUp {
+                    RoundedRectangle(cornerRadius: cornerRadius).fill(Color.white)
+                    RoundedRectangle(cornerRadius: cornerRadius).stroke(lineWidth: lineWidth)
+                    Text(card.content)
+                } else {
+                    RoundedRectangle(cornerRadius: cornerRadius)
+                }
             }
+            .font(.system(size: min(geometry.size.width, geometry.size.height) * fontScaleFactor))
+            .foregroundColor(.orange)
         }
-        .font(randomNumber == 5 ? .title2 : .largeTitle)
-        .foregroundColor(.orange)
-        .aspectRatio(2/3, contentMode: .fit)
     }
+    
+    // MARK: Drawing Constants
+    
+    let cornerRadius: CGFloat = 10
+    let lineWidth: CGFloat = 3
+    let fontScaleFactor: CGFloat = 0.75
 }
 
 
