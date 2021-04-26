@@ -46,7 +46,8 @@ struct CardView: View {
         }
     }
     
-    // MARK: Drawing Constants
+    
+    // MARK: - Drawing Constants
     
     let cornerRadius: CGFloat = 10
     let lineWidth: CGFloat = 3
