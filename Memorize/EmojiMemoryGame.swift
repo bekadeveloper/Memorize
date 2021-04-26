@@ -13,7 +13,7 @@ class EmojiMemoryGame {
     private var model: MemoryGame<String> = EmojiMemoryGame.createMemoryGame()
     
     static func createMemoryGame() -> MemoryGame<String> {
-        return MemoryGame<String>(numberOfPairsOfCards: emojis.count, cardContentFactory: cardContentFactory)
+        return MemoryGame<String>(numberOfPairsOfCards: randomNumber, cardContentFactory: cardContentFactory)
     }
     
     var cards: [MemoryGame<String>.Card] {
@@ -27,7 +27,8 @@ class EmojiMemoryGame {
 }
 
 
-let emojis = ["👻","🎃","⚰️"]
+var emojis = ["👻", "🎃", "⚰️", "🕷", "🧟‍♀️"].shuffled()
+var randomNumber = Int.random(in: 2...5)
 
 func cardContentFactory(index: Int) -> String {
     return emojis[index]

@@ -11,7 +11,7 @@ struct ContentView: View {
     var viewModel: EmojiMemoryGame
     
     var body: some View {
-        VStack {
+        HStack {
             ForEach(viewModel.cards) { card in
                 CardView(card: card)
                     .onTapGesture {
@@ -37,9 +37,9 @@ struct CardView: View {
                 RoundedRectangle(cornerRadius: 10.0)
             }
         }
-        .font(.largeTitle)
+        .font(randomNumber == 5 ? .title2 : .largeTitle)
         .foregroundColor(.orange)
-        .frame(width: 300, height: 100)
+        .aspectRatio(2/3, contentMode: .fit)
     }
 }
 
