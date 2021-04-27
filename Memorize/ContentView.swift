@@ -9,9 +9,10 @@ import SwiftUI
 
 struct ContentView: View {
     @StateObject var viewModel: EmojiMemoryGame
+    var gridItems = [GridItem(.adaptive(minimum: 100))]
     
     var body: some View {
-        HStack {
+        LazyVGrid(columns: gridItems) {
             ForEach(viewModel.cards) { card in
                 CardView(card: card)
                     .aspectRatio(2/3, contentMode: .fit)
@@ -48,7 +49,7 @@ struct CardView: View {
     
     
     // MARK: - Drawing Constants
-    
+
     let cornerRadius: CGFloat = 10
     let lineWidth: CGFloat = 3
     let fontScaleFactor: CGFloat = 0.75
@@ -60,5 +61,6 @@ struct CardView: View {
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
         ContentView(viewModel: EmojiMemoryGame())
+            .preferredColorScheme(.dark)
     }
 }
