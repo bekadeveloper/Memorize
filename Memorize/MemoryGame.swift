@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct MemoryGame<CardContent> where CardContent: Equatable {
+struct MemoryGame<CardContent: Equatable> {
     var cards: [Card] = [Card]()
     
     init(numberOfPairsOfCards: Int, cardContentFactory: (Int) -> CardContent) {
@@ -28,16 +28,26 @@ struct MemoryGame<CardContent> where CardContent: Equatable {
         var isMatched: Bool = false
     }
     
-    var indexOfOneAndOnlyCard: Int?
     
-    //TODO: Make cards to be matched
+    var indexOfOneAndOnlyCard: Int?
     
     mutating func choose(card: Card) {
         guard let chosenIndex = cards.firstIndex(where: { $0.id == card.id }) else { return }
         
         if !cards[chosenIndex].isFaceUp && !cards[chosenIndex].isMatched {
+
             if indexOfOneAndOnlyCard == nil {
+                for index in cards.indices {
+                    cards[index].isFaceUp = false
+                }
                 indexOfOneAndOnlyCard = chosenIndex
+                
+            } else {
+                if cards[indexOfOneAndOnlyCard!].content == cards[chosenIndex].content {
+                    cards[indexOfOneAndOnlyCard!].isMatched = true
+                    cards[chosenIndex].isMatched = true
+                }
+                indexOfOneAndOnlyCard = nil
             }
             
             cards[chosenIndex].isFaceUp.toggle()

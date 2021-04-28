@@ -17,9 +17,7 @@ struct ContentView: View {
                 CardView(card: card)
                     .aspectRatio(2/3, contentMode: .fit)
                     .onTapGesture {
-                        withAnimation(.linear) {
-                            viewModel.choose(card: card)
-                        }
+                        viewModel.choose(card: card)
                     }
             }
         }
@@ -38,12 +36,13 @@ struct CardView: View {
                     RoundedRectangle(cornerRadius: cornerRadius).fill(Color.white)
                     RoundedRectangle(cornerRadius: cornerRadius).stroke(lineWidth: lineWidth)
                     Text(card.content)
-                } else {
+                } else if !card.isFaceUp && !card.isMatched {
                     RoundedRectangle(cornerRadius: cornerRadius)
                 }
             }
             .font(.system(size: min(geometry.size.width, geometry.size.height) * fontScaleFactor))
             .foregroundColor(.orange)
+            .animation(.spring())
         }
     }
     
