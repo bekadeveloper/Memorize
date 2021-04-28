@@ -36,13 +36,15 @@ struct CardView: View {
                     RoundedRectangle(cornerRadius: cornerRadius).fill(Color.white)
                     RoundedRectangle(cornerRadius: cornerRadius).stroke(lineWidth: lineWidth)
                     Text(card.content)
-                } else if !card.isFaceUp && !card.isMatched {
-                    RoundedRectangle(cornerRadius: cornerRadius)
+                } else {
+                    if !card.isMatched {
+                        RoundedRectangle(cornerRadius: cornerRadius)
+                    }
                 }
             }
             .font(.system(size: min(geometry.size.width, geometry.size.height) * fontScaleFactor))
             .foregroundColor(.orange)
-            .animation(.spring())
+            .animation(.linear)
         }
     }
     
