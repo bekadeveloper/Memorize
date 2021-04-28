@@ -15,7 +15,7 @@ struct ContentView: View {
         LazyVGrid(columns: gridItems) {
             ForEach(viewModel.cards) { card in
                 CardView(card: card)
-                    .aspectRatio(2/3, contentMode: .fit)
+                    .aspectRatio(1, contentMode: .fit)
                     .onTapGesture {
                         viewModel.choose(card: card)
                     }
@@ -51,9 +51,9 @@ struct CardView: View {
     
     // MARK: - Drawing Constants
 
-    let cornerRadius: CGFloat = 10
-    let lineWidth: CGFloat = 3
-    let fontScaleFactor: CGFloat = 0.75
+    private let cornerRadius: CGFloat = 10
+    private let lineWidth: CGFloat = 3
+    private let fontScaleFactor: CGFloat = 0.75
 }
 
 

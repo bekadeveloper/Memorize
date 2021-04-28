@@ -8,7 +8,7 @@
 import Foundation
 
 struct MemoryGame<CardContent: Equatable> {
-    var cards: [Card] = [Card]()
+    private(set) var cards: [Card] = [Card]()
     
     init(numberOfPairsOfCards: Int, cardContentFactory: (Int) -> CardContent) {
         
@@ -29,19 +29,18 @@ struct MemoryGame<CardContent: Equatable> {
     }
     
     
-    var indexOfOneAndOnlyCard: Int?
+    private var indexOfOneAndOnlyCard: Int?
     
     mutating func choose(card: Card) {
         guard let chosenIndex = cards.firstIndex(where: { $0.id == card.id }) else { return }
         
         if !cards[chosenIndex].isFaceUp && !cards[chosenIndex].isMatched {
-
+            
             if indexOfOneAndOnlyCard == nil {
                 for index in cards.indices {
                     cards[index].isFaceUp = false
                 }
                 indexOfOneAndOnlyCard = chosenIndex
-                
             } else {
                 if cards[indexOfOneAndOnlyCard!].content == cards[chosenIndex].content {
                     cards[indexOfOneAndOnlyCard!].isMatched = true
@@ -49,12 +48,7 @@ struct MemoryGame<CardContent: Equatable> {
                 }
                 indexOfOneAndOnlyCard = nil
             }
-            
             cards[chosenIndex].isFaceUp.toggle()
         }
-        
-        
-        
-        print("Card chosen: \(cards[chosenIndex])")
     }
 }
