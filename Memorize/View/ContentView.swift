@@ -8,17 +8,30 @@
 import SwiftUI
 
 struct ContentView: View {
-    @StateObject var viewModel: EmojiMemoryGame
-    var gridItems = [GridItem(.adaptive(minimum: 100))]
+    @ObservedObject var viewModel: EmojiMemoryGame
     
     var body: some View {
-        LazyVGrid(columns: gridItems) {
-            ForEach(viewModel.cards) { card in
+        VStack {
+            Grid(viewModel.cards) { card in
                 CardView(card: card)
-                    .aspectRatio(1, contentMode: .fit)
                     .onTapGesture {
-                        viewModel.choose(card: card)
+                        withAnimation(.linear) {
+                            viewModel.choose(card: card)
+                        }
                     }
+            }
+
+            Button(action:
+                withAnimation(.easeInOut) { // TODO: Animation is not working(
+                    viewModel.resetGame
+                }
+            ) {
+                Text("New Game")
+                    .bold()
+                    .padding(10)
+                    .background(Color.blue)
+                    .foregroundColor(.white)
+                    .cornerRadius(5)
             }
         }
         .padding()
@@ -29,20 +42,42 @@ struct ContentView: View {
 struct CardView: View {
     var card: MemoryGame<String>.Card
     
+    @State private var animatedBonusRemaining: Double = 0
+    
+    private func startBonusTimeAnimation() {
+        animatedBonusRemaining = card.bonusRemaining
+        withAnimation(.linear(duration: card.bonusTimeRemaining)) {
+            animatedBonusRemaining = 0
+        }
+    }
+    
     var body: some View {
         GeometryReader { geometry in
             if !card.isMatched || card.isFaceUp {
                 ZStack {
-                    Pie(startAngle: Angle.degrees(-90), endAngle: Angle.degrees(0))
-                        .padding(6)
-                        .opacity(pieOpacity)
+                    Group {
+                        if card.isConsumingBonusTime {
+                            Pie(startAngle: Angle.degrees(0-90), endAngle: Angle.degrees(-animatedBonusRemaining*360-90))
+                                .onAppear {
+                                    startBonusTimeAnimation()
+                                }
+                        } else {
+                            Pie(startAngle: Angle.degrees(0-90), endAngle: Angle.degrees(-animatedBonusRemaining*360-90))
+                        }
+                    }
+                    .padding(6)
+                    .opacity(pieOpacity)
+                    
                     Text(card.content)
                         .font(.system(size: min(geometry.size.width, geometry.size.height) * fontScaleFactor))
+                        .rotationEffect(.degrees(card.isMatched ? 360 : 0))
+                        .animation(card.isMatched ? Animation.linear(duration: 1).repeatForever(autoreverses: false) : .default)
                 }
                 .cardify(isFaceUp: card.isFaceUp)
-                .foregroundColor(.orange)
+                .transition(.scale)
             }
         }
+        .padding(5)
     }
     
     
